@@ -3,37 +3,52 @@ package main
 import (
 	"log"
 	"os"
+	"strconv"
 )
 
 type Config struct {
-	JiraBaseUrl		string
-	JiraUsername	string
-	JiraApiKey		string
-	JiraIssueId		string
-	BuildLink		string
-	BuildStatus		string
-	BuildMessage	string
-	Verbose			bool
+	JiraBaseUrl  string
+	JiraUsername string
+	JiraApiKey   string
+	JiraIssueId  string
+	BuildLink    string
+	BuildStatus  string
+	BuildMessage string
+	Verbose      bool
 }
 
 func setupEnvironment() Config {
 	var environment Config
 
-	// Verify that the Jira base url was passed in with the step
-	passedUrl, exists := os.LookupEnv("baseUrl")
-	if !exists {
-		log.Fatal("Fatal Error - Exiting Step: Jira base url is a required field")		
+	// Setting default log level
+	verbose, err := strconv.ParseBool(getEnvironmentVariable("verbose", false))
+	if err != nil {
+		environment.Verbose = false
 	} else {
-		environment.JiraBaseUrl = passedUrl
+		environment.Verbose = verbose
 	}
 
-	environment.JiraUsername = "brandon@codefresh.io"
-	environment.JiraApiKey = "LOMSbcZZF4jO4xji0zTWDF24"
-	environment.JiraIssueId = "42966"
-	environment.BuildLink = "https://g.codefresh.io/build/5ea4f9bc9365eb3265d5fe97"
-	environment.BuildStatus = "Successful"
-	environment.BuildMessage = "Some custom message"
-	environment.Verbose = true
+	// Verify that the required variables are passed in with the step
+	environment.JiraBaseUrl = getEnvironmentVariable("baseUrl", true)
+	environment.JiraUsername = getEnvironmentVariable("username", true)
+	environment.JiraApiKey = getEnvironmentVariable("apiKey", true)
+	environment.JiraIssueId = getEnvironmentVariable("issue", true)
+
+	// Codefresh provided variables
+	environment.BuildLink = getEnvironmentVariable("buildLink", false)
+	environment.BuildStatus = getEnvironmentVariable("buildStatus", false)
+	environment.BuildMessage = getEnvironmentVariable("buildMessage", false)
 
 	return environment
+}
+
+func getEnvironmentVariable(environmentVariable string, required bool) string {
+	desiredVariable, exists := os.LookupEnv(environmentVariable)
+	if !exists && required {
+		log.Fatalf("Fatal Error - Exiting Step: %s is a required field", environmentVariable)
+	} else if !exists {
+		log.Printf("Environment variable %s not set", environmentVariable)
+	}
+
+	return desiredVariable
 }
