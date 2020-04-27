@@ -1,46 +1,21 @@
 package main
 
 import (
+	b64 "encoding/base64"
 	"fmt"
-	"log"
-	"os"
 	"strings"
 	"net/http"
 	"io/ioutil"
 )
 
-type Config struct {
-	JiraBaseUrl		string
-	Username		string
-	ApiKey			string
-	JiraIssueId		string
-	BuildLink		string
-	BuildStatus		string
-	BuildMessage	string
-}
-
-func setupEnvironment() Config {
-	var environment Config
-
-	// Verify that the Jira base url was passed in with the step
-	passedUrl, exists := os.LookupEnv("baseUrl")
-	if !exists {
-		log.Fatal("Fatal Error - Exiting Step: Jira base url is a required field")		
-	} else {
-		environment.JiraBaseUrl = passedUrl
-	}
-
-	return environment
-}
-
 func main() {
-	// Grab the base path from the environment
-	var stepEnvironment Config	
-	stepEnvironment = setupEnvironment()
+	// Grab the environment variables from the step
+	var environment Config	
+	environment = setupEnvironment()
 
-	fmt.Println("baseUrl=", stepEnvironment.JiraBaseUrl)
+	fmt.Println("baseUrl=", environment.JiraBaseUrl)
 
-	url := stepEnvironment.JiraBaseUrl + "rest/api/2/issue/42966/comment"
+	url := environment.JiraBaseUrl + "rest/api/2/issue/" + environment.JiraIssueId + "/comment"
 	method := "POST"
 
 	payload := strings.NewReader("{\"body\": \"Test comment\\nTest comment 3\"}")
@@ -52,9 +27,15 @@ func main() {
 	if err != nil {
 	fmt.Println(err)
 	}
-	req.Header.Add("Authorization", "Basic YnJhbmRvbkBjb2RlZnJlc2guaW86TE9NU2JjWlpGNGpPNHhqaTB6VFdERjI0")
+
+	// Convert the username and the api key to a base64 encoded authorization key
+	authorizationHeader := "Basic " + b64.StdEncoding.EncodeToString([]byte(environment.JiraUsername + ":" + environment.JiraApiKey))
+	if environment.Verbose {
+		fmt.Println("Authorization Header:", authorizationHeader)
+	}	
+	
+	req.Header.Add("Authorization", authorizationHeader)
 	req.Header.Add("Content-Type", "application/json")
-	req.Header.Add("Cookie", "atlassian.xsrf.token=BQ6L-X8LN-389U-ZPP2_5ee9bac05d2843742a3665bb4113e2191f1eae43_lin")
 
 	res, err := client.Do(req)
 	defer res.Body.Close()
