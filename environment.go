@@ -7,14 +7,15 @@ import (
 )
 
 type Config struct {
-	JiraBaseUrl  string
-	JiraUsername string
-	JiraApiKey   string
-	JiraIssueId  string
-	BuildLink    string
-	BuildStatus  string
-	BuildMessage string
-	Verbose      bool
+	JiraBaseUrl   string
+	JiraUsername  string
+	JiraApiKey    string
+	JiraIssueId   string
+	JiraCommentId string
+	BuildLink     string
+	BuildStatus   string
+	BuildMessage  string
+	Verbose       bool
 }
 
 func setupEnvironment() Config {
@@ -38,6 +39,9 @@ func setupEnvironment() Config {
 	environment.BuildLink = getEnvironmentVariable("buildLink", false)
 	environment.BuildStatus = getEnvironmentVariable("buildStatus", false)
 	environment.BuildMessage = getEnvironmentVariable("buildMessage", false)
+
+	// Comment id for updating build status of original comment - won't be provided for initial run
+	environment.JiraCommentId = getEnvironmentVariable("commentId", false)
 
 	return environment
 }
