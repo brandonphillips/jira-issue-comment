@@ -2,23 +2,45 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"os"
 	"strings"
 	"net/http"
 	"io/ioutil"
 )
 
-func main() {
-	// Grab the base path from the environment
-	baseUrl := "https://jira.atlassian.com"
-	passedUrl, exists := os.LookupEnv("baseUrl")
+type Config struct {
+	JiraBaseUrl		string
+	Username		string
+	ApiKey			string
+	JiraIssueId		string
+	BuildLink		string
+	BuildStatus		string
+	BuildMessage	string
+}
 
-	if exists {
-		fmt.Println(baseUrl)
-		baseUrl = passedUrl
+func setupEnvironment() Config {
+	var environment Config
+
+	// Verify that the Jira base url was passed in with the step
+	passedUrl, exists := os.LookupEnv("baseUrl")
+	if !exists {
+		log.Fatal("Fatal Error - Exiting Step: Jira base url is a required field")		
+	} else {
+		environment.JiraBaseUrl = passedUrl
 	}
 
-	url := baseUrl + "rest/api/2/issue/42966/comment"
+	return environment
+}
+
+func main() {
+	// Grab the base path from the environment
+	var stepEnvironment Config	
+	stepEnvironment = setupEnvironment()
+
+	fmt.Println("baseUrl=", stepEnvironment.JiraBaseUrl)
+
+	url := stepEnvironment.JiraBaseUrl + "rest/api/2/issue/42966/comment"
 	method := "POST"
 
 	payload := strings.NewReader("{\"body\": \"Test comment\\nTest comment 3\"}")
