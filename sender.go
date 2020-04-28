@@ -81,6 +81,7 @@ func buildCommentBody(environment Config) string {
 	var buffer bytes.Buffer
 	buffer.WriteString("{\"body\": \"")
 	buffer.WriteString(environment.BuildMessage + "\\n")
+	buffer.WriteString("Pipeline: " + environment.PipelineName + "\\n")
 	buffer.WriteString("Build Link: " + environment.BuildLink + "\\n")
 	buffer.WriteString("Build Status: " + environment.BuildStatus)
 	buffer.WriteString("\"}")

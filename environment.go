@@ -15,6 +15,7 @@ type Config struct {
 	BuildLink     string
 	BuildStatus   string
 	BuildMessage  string
+	PipelineName  string
 	Verbose       bool
 }
 
@@ -39,6 +40,7 @@ func setupEnvironment() Config {
 	environment.BuildLink = getEnvironmentVariable("buildLink", false)
 	environment.BuildStatus = getEnvironmentVariable("buildStatus", false)
 	environment.BuildMessage = getEnvironmentVariable("buildMessage", false)
+	environment.PipelineName = getEnvironmentVariable("pipelineName", false)
 
 	// Comment id for updating build status of original comment - won't be provided for initial run
 	environment.JiraCommentId = getEnvironmentVariable("commentId", false)

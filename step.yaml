@@ -1,0 +1,97 @@
+kind: step-type
+version: '1.0'
+metadata:
+  name: codefreshdemo/jira-ticket-update
+  version: 0.1.0
+  isPublic: false
+  description: Add or update a Jira issue comment
+  # Should be updated to https://github.com/codefresh-io/steps/tree/master/incubating/bump-build-number
+  sources:
+    - >-
+      https://github.com/brandonphillips/jira-ticket-update
+  stage: incubating
+  maintainers:
+    - name: Brandon Phillips
+  categories:
+    - build
+  official: false
+  tags: []
+  icon:
+    type: image
+    # Should be updated to https://raw.githubusercontent.com/codefresh-plugins/bump-build-number/master/icon.png
+    url: https://raw.githubusercontent.com/brandonphillips/bump-build-number/master/icon.png
+    background: "#f4f4f4"
+    size:
+      large:
+        url: >-
+          https://raw.githubusercontent.com/brandonphillips/bump-build-number/master/icon.png
+  examples:
+    - description: Custom Annotation Name
+      workflow:
+        JiraTicketUpdate:
+          title: Bump custom annotation name
+          type: jira-ticket-update
+          arguments:
+            ANNOTATION_NAME: ${{CF_BRANCH}}_build_number
+spec:
+  arguments: |-
+    {
+        "definitions": {},
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "additionalProperties": false,
+        "patterns": [],
+        "required": [
+            "baseUrl",
+            "username",
+            "apiKey",
+            "issue"
+        ],
+        "properties": {
+            "baseUrl": {
+                "type": "string",
+                "description": "Jira base url"
+            },
+            "username": {
+                "type": "string",
+                "description": "Jira username"
+            },
+            "apiKey": {
+                "type": "string",
+                "description": "Jira API key"
+            },
+            "issue": {
+                "type": "string",
+                "description": "Jira issue ID or key"
+            },
+            "buildMessage": {
+                "type": "string",
+                "description": "Custom build message at the top of the Jira comment"
+            },
+            "buildStatus": {
+                "type": "string",
+                "description": "Current status of the build"
+            },
+            "commentId": {
+                "type": "string",
+                "description": "Jira comment ID to update a comment"
+            },
+            "verbose": {
+                "type": "string",
+                "description": "Enable verbose logging by setting to true"
+            }
+        }
+    }
+  stepsTemplate: |-
+    main:
+        name: jira-ticket-update
+        image: fleatbnp/jira-ticket-update:v0.1.0
+        environment:
+          - 'buildLink=${{CF_BUILD_URL}}'
+          - 'pipelineName=${{CF_PIPELINE_NAME}}'
+        [[ range $key, $val := .Arguments ]]
+          - '[[ $key ]]=[[ $val ]]'
+        [[- end ]]
+  delimiters:
+    left: '[['
+    right: ']]'
