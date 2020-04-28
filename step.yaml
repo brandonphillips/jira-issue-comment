@@ -42,41 +42,41 @@ spec:
         "additionalProperties": false,
         "patterns": [],
         "required": [
-            "baseUrl",
-            "username",
-            "apiKey",
-            "issue"
+            "JIRA_BASE_URL",
+            "JIRA_USERNAME",
+            "JIRA_API_KEY",
+            "JIRA_ISSUE"
         ],
         "properties": {
-            "baseUrl": {
+            "JIRA_BASE_URL": {
                 "type": "string",
                 "description": "Jira base url"
             },
-            "username": {
+            "JIRA_USERNAME": {
                 "type": "string",
                 "description": "Jira username"
             },
-            "apiKey": {
+            "JIRA_API_KEY": {
                 "type": "string",
                 "description": "Jira API key"
             },
-            "issue": {
+            "JIRA_ISSUE": {
                 "type": "string",
                 "description": "Jira issue ID or key"
             },
-            "buildMessage": {
+            "BUILD_MESSAGE": {
                 "type": "string",
                 "description": "Custom build message at the top of the Jira comment"
             },
-            "buildStatus": {
+            "BUILD_STATUS": {
                 "type": "string",
                 "description": "Current status of the build"
             },
-            "commentId": {
+            "JIRA_COMMENT_ID": {
                 "type": "string",
                 "description": "Jira comment ID to update a comment"
             },
-            "verbose": {
+            "VERBOSE": {
                 "type": "string",
                 "description": "Enable verbose logging by setting to true"
             }
@@ -87,8 +87,8 @@ spec:
         name: jira-ticket-update
         image: fleatbnp/jira-ticket-update:v0.1.0
         environment:
-          - 'buildLink=${{CF_BUILD_URL}}'
-          - 'pipelineName=${{CF_PIPELINE_NAME}}'
+          - 'CF_BUILD_URL=${{CF_BUILD_URL}}'
+          - 'CF_PIPELINE_NAME=${{CF_PIPELINE_NAME}}'
         [[ range $key, $val := .Arguments ]]
           - '[[ $key ]]=[[ $val ]]'
         [[- end ]]

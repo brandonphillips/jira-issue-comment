@@ -23,7 +23,7 @@ func setupEnvironment() Config {
 	var environment Config
 
 	// Setting default log level
-	verbose, err := strconv.ParseBool(getEnvironmentVariable("verbose", false))
+	verbose, err := strconv.ParseBool(getEnvironmentVariable("VERBOSE", false))
 	if err != nil {
 		environment.Verbose = false
 	} else {
@@ -31,19 +31,19 @@ func setupEnvironment() Config {
 	}
 
 	// Verify that the required variables are passed in with the step
-	environment.JiraBaseUrl = getEnvironmentVariable("baseUrl", true)
-	environment.JiraUsername = getEnvironmentVariable("username", true)
-	environment.JiraApiKey = getEnvironmentVariable("apiKey", true)
-	environment.JiraIssueId = getEnvironmentVariable("issue", true)
+	environment.JiraBaseUrl = getEnvironmentVariable("JIRA_BASE_URL", true)
+	environment.JiraUsername = getEnvironmentVariable("JIRA_USERNAME", true)
+	environment.JiraApiKey = getEnvironmentVariable("JIRA_API_KEY", true)
+	environment.JiraIssueId = getEnvironmentVariable("JIRA_ISSUE", true)
 
 	// Codefresh provided variables
-	environment.BuildLink = getEnvironmentVariable("buildLink", false)
-	environment.BuildStatus = getEnvironmentVariable("buildStatus", false)
-	environment.BuildMessage = getEnvironmentVariable("buildMessage", false)
-	environment.PipelineName = getEnvironmentVariable("pipelineName", false)
+	environment.BuildLink = getEnvironmentVariable("CF_BUILD_URL", false)
+	environment.BuildStatus = getEnvironmentVariable("BUILD_STATUS", false)
+	environment.BuildMessage = getEnvironmentVariable("BUILD_MESSAGE", false)
+	environment.PipelineName = getEnvironmentVariable("CF_PIPELINE_NAME", false)
 
 	// Comment id for updating build status of original comment - won't be provided for initial run
-	environment.JiraCommentId = getEnvironmentVariable("commentId", false)
+	environment.JiraCommentId = getEnvironmentVariable("JIRA_COMMENT_ID", false)
 
 	return environment
 }
