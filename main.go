@@ -7,4 +7,6 @@ func main() {
 
 	// Call to add or update a comment
 	sendComment(environment)
+	createBuildAnnotation(environment)
+	exportCommentIdVariable(environment)
 }

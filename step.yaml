@@ -108,6 +108,7 @@ spec:
         environment:
           - 'CF_BUILD_URL=${{CF_BUILD_URL}}'
           - 'CF_PIPELINE_NAME=${{CF_PIPELINE_NAME}}'
+          - 'CF_VOLUME_PATH=${{CF_VOLUME_PATH}}'
           - 'CF_BRANCH=${{CF_BRANCH}}'
           - 'CF_COMMIT_AUTHOR=${{CF_COMMIT_AUTHOR}}'
           - 'CF_COMMIT_MESSAGE=${{CF_COMMIT_MESSAGE}}'

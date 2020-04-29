@@ -89,7 +89,3 @@ func buildCommentBody(environment Config) string {
 
 	return buffer.String()
 }
-
-// Jira issue source field
-// Jira issue regex to get issue name
-// advanced workflow for success or failure -- workflow.result
