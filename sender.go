@@ -88,3 +88,5 @@ func buildCommentBody(environment Config) string {
 
 	return buffer.String()
 }
+
+// Helper method that checks if the value is populated and loops through them to build a string

@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"os"
 	"strconv"
@@ -17,18 +18,18 @@ type Config struct {
 	BuildMessage  string
 	PipelineName  string
 	Verbose       bool
+	InfoValues    []OptionalInfoValue
+}
+
+type OptionalInfoValue struct {
+	DisplayText string
+	Value       string
 }
 
 func setupEnvironment() Config {
 	var environment Config
 
-	// Setting default log level
-	verbose, err := strconv.ParseBool(getEnvironmentVariable("VERBOSE", false))
-	if err != nil {
-		environment.Verbose = false
-	} else {
-		environment.Verbose = verbose
-	}
+	environment.Verbose = convertStringToBool(getEnvironmentVariable("VERBOSE", false))
 
 	// Verify that the required variables are passed in with the step
 	environment.JiraBaseUrl = getEnvironmentVariable("JIRA_BASE_URL", true)
@@ -45,6 +46,22 @@ func setupEnvironment() Config {
 	// Comment id for updating build status of original comment - won't be provided for initial run
 	environment.JiraCommentId = getEnvironmentVariable("JIRA_COMMENT_ID", false)
 
+	if convertStringToBool(getEnvironmentVariable("ADD_BRANCH_INFO", false)) {
+		environment.InfoValues = append(environment.InfoValues,
+			OptionalInfoValue{
+				DisplayText: "Branch: ",
+				Value:       getEnvironmentVariable("CF_BRANCH", false),
+			})
+	}
+
+	if convertStringToBool(getEnvironmentVariable("ADD_COMMIT_INFO", false)) {
+		fmt.Println("Add commit info is set")
+	}
+
+	if convertStringToBool(getEnvironmentVariable("ADD_PR_INFO", false)) {
+		fmt.Println("Add pr info is set")
+	}
+
 	return environment
 }
 
@@ -57,4 +74,12 @@ func getEnvironmentVariable(environmentVariable string, required bool) string {
 	}
 
 	return desiredVariable
+}
+
+func convertStringToBool(stringValue string) bool {
+	boolValue, err := strconv.ParseBool(stringValue)
+	if err != nil {
+		boolValue = false
+	}
+	return boolValue
 }

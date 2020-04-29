@@ -76,8 +76,23 @@ spec:
                 "type": "string",
                 "description": "Jira comment ID to update a comment"
             },
+            "ADD_BRANCH_INFO": {
+                "type": "boolean",
+                "description": "Add the branch information to the Jira comment",
+                "default": false
+            },
+            "ADD_COMMIT_INFO": {
+                "type": "boolean",
+                "description": "Add the commit information to the Jira comment",
+                "default": false
+            },
+            "ADD_PR_INFO": {
+                "type": "boolean",
+                "description": "Add the pull request information to the Jira comment",
+                "default": false
+            },
             "VERBOSE": {
-                "type": "string",
+                "type": "boolean",
                 "description": "Enable verbose logging by setting to true"
             }
         }
@@ -89,6 +104,14 @@ spec:
         environment:
           - 'CF_BUILD_URL=${{CF_BUILD_URL}}'
           - 'CF_PIPELINE_NAME=${{CF_PIPELINE_NAME}}'
+          - 'CF_BRANCH=${{CF_BRANCH}}'
+          - 'CF_COMMIT_AUTHOR=${{CF_COMMIT_AUTHOR}}'
+          - 'CF_COMMIT_URL=${{CF_COMMIT_URL}}'
+          - 'CF_COMMIT_MESSAGE=${{CF_COMMIT_MESSAGE}}'
+          - 'CF_PULL_REQUEST_ACTION=${{CF_PULL_REQUEST_ACTION}}'
+          - 'CF_PULL_REQUEST_TARGET=${{CF_PULL_REQUEST_TARGET}}'
+          - 'CF_PULL_REQUEST_NUMBER=${{CF_PULL_REQUEST_NUMBER}}'
+          - 'CF_PULL_REQUEST_ID=${{CF_PULL_REQUEST_ID}}'
         [[ range $key, $val := .Arguments ]]
           - '[[ $key ]]=[[ $val ]]'
         [[- end ]]
