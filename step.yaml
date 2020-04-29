@@ -67,7 +67,7 @@ spec:
             "JIRA_ISSUE_SOURCE_FIELD_REGEX": {
                 "type": "string",
                 "description": "Regex expression to get the Jira issue info from the JIRA_ISSUE_SOURCE_FIELD"
-            }
+            },
             "BUILD_MESSAGE": {
                 "type": "string",
                 "description": "Custom build message at the top of the Jira comment"
