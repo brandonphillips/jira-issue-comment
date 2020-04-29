@@ -18,7 +18,7 @@ type Request struct {
 	Payload             *strings.Reader
 }
 
-func sendComment(environment Config) {
+func sendComment(environment Config) string {
 	var request Request
 	request = setupRequest(environment)
 	if environment.Verbose {
@@ -43,7 +43,8 @@ func sendComment(environment Config) {
 	fmt.Println("Response Body\n" + string(responseBody))
 	responseJson := map[string]interface{}{}
 	json.Unmarshal([]byte(responseBody), &responseJson)
-	fmt.Println("\nComment Id: ", responseJson["id"])
+	// fmt.Println("\nComment Id: ", responseJson["id"])
+	return responseJson["id"].(string)
 }
 
 func setupRequest(environment Config) Request {
