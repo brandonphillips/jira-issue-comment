@@ -66,6 +66,7 @@ func setupRequest(environment Config) Request {
 func verboseLogging(environment Config, request Request) {
 	fmt.Println("\nVerbose Logging")
 	fmt.Println("Base Url: ", environment.JiraBaseUrl)
+	fmt.Println("Jira Issue Key: " + environment.JiraIssueId)
 	fmt.Println("Full Url: " + request.Url)
 	fmt.Println("Username: ", environment.JiraUsername)
 	fmt.Println("API Key: ", environment.JiraApiKey)
