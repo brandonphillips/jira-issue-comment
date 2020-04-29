@@ -70,6 +70,7 @@ func verboseLogging(environment Config, request Request) {
 	fmt.Println("Username: ", environment.JiraUsername)
 	fmt.Println("API Key: ", environment.JiraApiKey)
 	fmt.Println("Authorization Header: ", request.AuthorizationHeader)
+	fmt.Printf("Comment Info: %v\n", environment.InfoValues)
 	fmt.Println("Comment Payload: ", request.Payload)
 	fmt.Println()
 }
@@ -87,3 +88,7 @@ func buildCommentBody(environment Config) string {
 
 	return buffer.String()
 }
+
+// Jira issue source field
+// Jira issue regex to get issue name
+// advanced workflow for success or failure -- workflow.result

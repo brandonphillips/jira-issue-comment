@@ -45,7 +45,7 @@ spec:
             "JIRA_BASE_URL",
             "JIRA_USERNAME",
             "JIRA_API_KEY",
-            "JIRA_ISSUE"
+            "JIRA_ISSUE_SOURCE_FIELD"
         ],
         "properties": {
             "JIRA_BASE_URL": {
@@ -60,10 +60,14 @@ spec:
                 "type": "string",
                 "description": "Jira API key"
             },
-            "JIRA_ISSUE": {
+            "JIRA_ISSUE_SOURCE_FIELD": {
                 "type": "string",
-                "description": "Jira issue ID or key"
+                "description": "Jira issue ID or key source field"
             },
+            "JIRA_ISSUE_SOURCE_FIELD_REGEX": {
+                "type": "string",
+                "description": "Regex expression to get the Jira issue info from the JIRA_ISSUE_SOURCE_FIELD"
+            }
             "BUILD_MESSAGE": {
                 "type": "string",
                 "description": "Custom build message at the top of the Jira comment"

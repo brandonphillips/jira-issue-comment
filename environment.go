@@ -1,9 +1,9 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"os"
+	"regexp"
 	"strconv"
 )
 
@@ -31,12 +31,20 @@ func setupEnvironment() Config {
 	environment.JiraBaseUrl = getEnvironmentVariable("JIRA_BASE_URL", true)
 	environment.JiraUsername = getEnvironmentVariable("JIRA_USERNAME", true)
 	environment.JiraApiKey = getEnvironmentVariable("JIRA_API_KEY", true)
-	environment.JiraIssueId = getEnvironmentVariable("JIRA_ISSUE", true)
+
+	// Get the Jira issue id or key form the source field (use the regex if passed)
+	jiraIssueSourceField := getEnvironmentVariable("JIRA_ISSUE_SOURCE_FIELD", true)
+	issueRegex := getEnvironmentVariable("JIRA_ISSUE_SOURCE_FIELD_REGEX", false)
+	if len(issueRegex) > 0 {
+		expression := regexp.MustCompile(issueRegex)
+		jiraIssueSourceField = expression.FindString(jiraIssueSourceField)
+	}
+	environment.JiraIssueId = jiraIssueSourceField
 
 	// Comment id for updating build status of original comment - won't be provided for initial run
 	environment.JiraCommentId = getEnvironmentVariable("JIRA_COMMENT_ID", false)
 
-	// Codefresh provided variables
+	// Codefresh provided variables - will always be populated
 	environment.InfoValues = append(environment.InfoValues,
 		CommentValue{"", getEnvironmentVariable("BUILD_MESSAGE", false)},
 		CommentValue{"Pipeline: ", getEnvironmentVariable("CF_PIPELINE_NAME", false)},
@@ -61,8 +69,6 @@ func setupEnvironment() Config {
 		environment = appendCommentValueIfPopulated(environment, "Pull Request Id: ", "CF_PULL_REQUEST_ID")
 	}
 
-	fmt.Printf("\n%v\n", environment.InfoValues)
-
 	return environment
 }
 
@@ -79,7 +85,7 @@ func getEnvironmentVariable(environmentVariable string, required bool) string {
 	if !exists && required {
 		log.Fatalf("Fatal Error - Exiting Step: %s is a required field", environmentVariable)
 	} else if !exists {
-		log.Printf("Environment variable %s not set", environmentVariable)
+		log.Printf("Optional Environment variable %s not set", environmentVariable)
 	}
 
 	return desiredVariable
