@@ -70,9 +70,6 @@ func verboseLogging(environment Config, request Request) {
 	fmt.Println("Username: ", environment.JiraUsername)
 	fmt.Println("API Key: ", environment.JiraApiKey)
 	fmt.Println("Authorization Header: ", request.AuthorizationHeader)
-	fmt.Println("Codefresh Build Link: ", environment.BuildLink)
-	fmt.Println("Build Status: ", environment.BuildStatus)
-	fmt.Println("Build Message: ", environment.BuildMessage)
 	fmt.Println("Comment Payload: ", request.Payload)
 	fmt.Println()
 }
@@ -80,13 +77,13 @@ func verboseLogging(environment Config, request Request) {
 func buildCommentBody(environment Config) string {
 	var buffer bytes.Buffer
 	buffer.WriteString("{\"body\": \"")
-	buffer.WriteString(environment.BuildMessage + "\\n")
-	buffer.WriteString("Pipeline: " + environment.PipelineName + "\\n")
-	buffer.WriteString("Build Link: " + environment.BuildLink + "\\n")
-	buffer.WriteString("Build Status: " + environment.BuildStatus)
+
+	for i, currentValue := range environment.InfoValues {
+		i = i
+		buffer.WriteString(currentValue.DisplayText + currentValue.Value + "\\n")
+	}
+
 	buffer.WriteString("\"}")
 
 	return buffer.String()
 }
-
-// Helper method that checks if the value is populated and loops through them to build a string
