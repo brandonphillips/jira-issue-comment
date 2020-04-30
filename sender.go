@@ -43,8 +43,9 @@ func sendComment(environment Config) string {
 	fmt.Println("Response Body\n" + string(responseBody))
 	responseJson := map[string]interface{}{}
 	json.Unmarshal([]byte(responseBody), &responseJson)
-	// fmt.Println("\nComment Id: ", responseJson["id"])
-	return responseJson["id"].(string)
+	commentId := responseJson["id"].(string)
+	fmt.Println("\nComment Id: ", commentId)
+	return commentId
 }
 
 func setupRequest(environment Config) Request {

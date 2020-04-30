@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"io/ioutil"
 	"os"
 )
 
@@ -11,41 +10,32 @@ func createBuildAnnotation(environment Config) {
 }
 
 func exportCommentIdVariable(environment Config) {
-	// dat, err := ioutil.ReadFile("/codefresh/volume/env_vars_to_export")
-	// check(err)
-	// fmt.Print(string(dat))
-	// fmt.Println()
+	fmt.Println("environment.JiraCommentId: " + environment.JiraCommentId)
 
-	// file, err := os.OpenFile("/codefresh/volume/env_vars_to_export", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
-	// if err != nil {
-	// 	file.WriteString("JIRA_COMMENT_ID=" + environment.JiraCommentId)
-	// }
-	// defer file.Close()
-	fmt.Println("JiraCommentId: " + environment.JiraCommentId)
+	if fileExists(environment.CodefreshVolumePath + "/env_vars_to_export") {
+		f, err := os.OpenFile(environment.CodefreshVolumePath+"/env_vars_to_export", os.O_APPEND|os.O_WRONLY, 0600)
+		if err != nil {
+			fmt.Println("Error opening env_vars_to_export file")
+			panic(err)
+		} else {
+			defer f.Close()
 
-	// d1 := []byte("JIRA_COMMENT_ID=" + environment.JiraCommentId)
-	// d1 := []byte("JIRA_COMMENT_ID=30812")
-	// err2 := ioutil.WriteFile("/codefresh/volume/env_vars_to_export", d1, 0644)
-	// check(err2)
-	f, err := os.OpenFile("/codefresh/volume/env_vars_to_export", os.O_APPEND|os.O_WRONLY, 0600)
-	if err != nil {
-		panic(err)
+			if _, err = f.WriteString("JIRA_COMMENT_ID=" + environment.JiraCommentId + "\n"); err != nil {
+				fmt.Println("Error writing JIRA_COMMENT_ID to env_vars_to_export file")
+				panic(err)
+			}
+		}
+	} else {
+		fmt.Println("File:" + environment.CodefreshVolumePath + "/env_vars_to_export" +
+			"doesn't exist. Unable to write build variable JIRA_COMMENT_ID")
 	}
 
-	defer f.Close()
-
-	if _, err = f.WriteString("JIRA_COMMENT_ID=30812\n"); err != nil {
-		panic(err)
-	}
-
-	dat2, err := ioutil.ReadFile("/codefresh/volume/env_vars_to_export")
-	check(err)
-	fmt.Print(string(dat2))
-	fmt.Println()
 }
 
-func check(e error) {
-	if e != nil {
-		panic(e)
+func fileExists(filename string) bool {
+	info, err := os.Stat(filename)
+	if os.IsNotExist(err) {
+		return false
 	}
+	return !info.IsDir()
 }
