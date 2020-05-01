@@ -1,14 +1,14 @@
 kind: step-type
 version: '1.0'
 metadata:
-  name: codefreshdemo/jira-ticket-update
+  name: codefreshdemo/jira-issue-comment
   version: 0.1.0
   isPublic: false
   description: Add or update a Jira issue comment
-  # Should be updated to https://github.com/codefresh-io/steps/tree/master/incubating/bump-build-number
+  # Should be updated to https://github.com/codefresh-io/steps/tree/master/incubating/jira-issue-comment
   sources:
     - >-
-      https://github.com/brandonphillips/jira-ticket-update
+      https://github.com/brandonphillips/jira-issue-comment
   stage: incubating
   maintainers:
     - name: Brandon Phillips
@@ -18,19 +18,19 @@ metadata:
   tags: []
   icon:
     type: image
-    # Should be updated to https://raw.githubusercontent.com/codefresh-plugins/bump-build-number/master/icon.png
-    url: https://raw.githubusercontent.com/brandonphillips/bump-build-number/master/icon.png
+    # Should be updated to https://raw.githubusercontent.com/codefresh-plugins/jira-issue-comment/master/icon.png
+    url: https://raw.githubusercontent.com/brandonphillips/jira-issue-comment/master/icon.png
     background: "#f4f4f4"
     size:
       large:
         url: >-
-          https://raw.githubusercontent.com/brandonphillips/bump-build-number/master/icon.png
+          https://raw.githubusercontent.com/brandonphillips/jira-issue-comment/master/icon.png
   examples:
     - description: Custom Annotation Name
       workflow:
         JiraTicketUpdate:
           title: Bump custom annotation name
-          type: jira-ticket-update
+          type: jira-issue-comment
           arguments:
             ANNOTATION_NAME: ${{CF_BRANCH}}_build_number
 spec:
@@ -103,8 +103,8 @@ spec:
     }
   stepsTemplate: |-
     main:
-        name: jira-ticket-update
-        image: fleatbnp/jira-ticket-update:v0.1.0
+        name: jira-issue-comment
+        image: fleatbnp/jira-issue-comment:v0.1.0
         environment:
           - 'CF_BUILD_URL=${{CF_BUILD_URL}}'
           - 'CF_PIPELINE_NAME=${{CF_PIPELINE_NAME}}'
