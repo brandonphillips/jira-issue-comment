@@ -1,12 +1,52 @@
 package main
 
 import (
+	"bytes"
+	"encoding/json"
 	"fmt"
+	"io/ioutil"
+	"net/http"
 	"os"
 )
 
-func createBuildAnnotation(environment Config) {
+type Annotation struct {
+	EntityId   string `json:"entityId"`
+	EntityType string `json:"entityType"`
+	Key        string `json:"key"`
+	Value      string `json:"value"`
+}
 
+func createBuildAnnotation(environment Config) {
+	annotation := Annotation{
+		EntityId:   environment.CodefreshBuildId,
+		EntityType: "build",
+		Key:        "jira-issue-url",
+		Value:      environment.JiraBaseUrl + "/browse/" + environment.JiraIssueId,
+	}
+
+	annotationJson, err := json.Marshal(annotation)
+	if err != nil {
+		fmt.Printf("Formatting annotation JSON failed with error %s\n", err)
+	}
+
+	request, err := http.NewRequest("POST", "https://g.codefresh.io/api/annotations", bytes.NewBuffer(annotationJson))
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	request.Header.Add("Authorization", environment.CodefreshApiKey)
+	request.Header.Add("Content-Type", "application/json")
+
+	client := &http.Client{}
+	response, err := client.Do(request)
+
+	if err != nil {
+		fmt.Printf("Codefresh annotation request failed with error %s\n", err)
+	} else {
+		data, _ := ioutil.ReadAll(response.Body)
+		fmt.Println("Codefresh annotation creation successful")
+		fmt.Println(string(data))
+	}
 }
 
 func exportCommentIdVariable(environment Config) {

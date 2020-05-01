@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"os"
 	"regexp"
@@ -14,7 +13,9 @@ type Config struct {
 	JiraApiKey          string
 	JiraIssueId         string
 	JiraCommentId       string
+	CodefreshApiKey     string
 	CodefreshVolumePath string
+	CodefreshBuildId    string
 	Verbose             bool
 	InfoValues          []CommentValue
 }
@@ -30,9 +31,10 @@ func setupEnvironment() Config {
 	// Enable more verbose logging
 	environment.Verbose = convertStringToBool(getEnvironmentVariable("VERBOSE", false))
 
-	// Retrieve the codefresh volume path
+	// Retrieve the codefresh volume path, API key, and build ID
 	environment.CodefreshVolumePath = getEnvironmentVariable("CF_VOLUME_PATH", false)
-	fmt.Println("CF_VOLUME_PATH=" + environment.CodefreshVolumePath)
+	environment.CodefreshApiKey = getEnvironmentVariable("CF_API_KEY", false)
+	environment.CodefreshBuildId = getEnvironmentVariable("CF_BUILD_ID", false)
 
 	// Verify that the required variables are passed in with the step
 	environment.JiraBaseUrl = getEnvironmentVariable("JIRA_BASE_URL", true)

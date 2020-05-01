@@ -107,7 +107,9 @@ spec:
         image: fleatbnp/jira-issue-comment:v0.1.0
         environment:
           - 'CF_BUILD_URL=${{CF_BUILD_URL}}'
+          - 'CF_BUILD_ID=${{CF_BUILD_ID}}'
           - 'CF_PIPELINE_NAME=${{CF_PIPELINE_NAME}}'
+          - 'CF_API_KEY=${{CF_API_KEY}}'
           - 'CF_VOLUME_PATH=${{CF_VOLUME_PATH}}'
           - 'CF_BRANCH=${{CF_BRANCH}}'
           - 'CF_COMMIT_AUTHOR=${{CF_COMMIT_AUTHOR}}'
