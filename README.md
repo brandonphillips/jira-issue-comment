@@ -4,7 +4,7 @@ This step will create a comment with build information on your Jira instance wit
 
 ## Prerequisites
 
-- Please create an [API token](https://confluence.atlassian.com/cloud/api-tokens-938839638.html) for Jira
+- Create an [API token](https://confluence.atlassian.com/cloud/api-tokens-938839638.html) for Jira
 
 ## Important Notes
 - Only populated data will be added to the comment
